@@ -3,7 +3,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import streamlit as st
 
-# Load the CSV file (Update file path if necessary)
+# Load the CSV file (Update the file path if necessary)
 file_path = 'Hindi_Songs_With_Tags_And_Links_.xlsx'
 songs_df = pd.read_excel(file_path)
 
@@ -55,38 +55,47 @@ def get_recommendations(query, cosine_sim=cosine_sim):
     else:
         return "Sorry, no song, artist, genre, or tags found matching that query. Please try another."
 
-query_params = st.experimental_get_query_params()
-
-if 'song' in query_params:
-    song_query = query_params['song'][0]
-    st.write(f"Recommendations for: {song_query}")
-    
-    recommendations = recommend_songs(song_query)
-# Streamlit Chatbot Interface
+# Streamlit App UI and Logic
 def chatbot():
-    st.title('Song Recommendation')
+    st.title('Song Recommendation System')
 
-    # Input for song name, artist, genre, type, or tags
-    user_input = st.text_input("Enter a song name, genre, artist, type, or tags:")
+    # Check if there are any query parameters passed from the website
+    query_params = st.experimental_get_query_params()
 
-    if user_input:
-        # Provide song recommendations based on user input
-        st.write(f"Looking for recommendations related to: **{user_input}**")
+    # If a query parameter exists, pre-fill the input box and show results
+    if 'song' in query_params:
+        song_query = query_params['song'][0]
+        st.write(f"Recommendations for: {song_query}")
+        recommendations = get_recommendations(song_query)
 
-        # Call the recommendation function
-        recommendations = get_recommendations(user_input)
+        # Display recommendations
+        display_recommendations(recommendations)
+    else:
+        # Input for song name, artist, genre, type, or tags
+        user_input = st.text_input("Enter a song name, genre, artist, type, or tags:")
 
-        # Display the recommendations
-        if isinstance(recommendations, pd.DataFrame):
-            for index, row in recommendations.iterrows():
-                st.write(f"**Song Name**: {row['Song Name']}")
-                st.write(f"**Singer Name**: {row['Singer Name']}")
-                st.write(f"**Type**: {row['Type']}")
-                st.write(f"**Genre**: {row['Genre']}")
-                st.write(f"[Listen here]({row['Link']})")
-                st.write("---")
-        else:
-            st.write(recommendations)
+        if user_input:
+            # Provide song recommendations based on user input
+            st.write(f"Looking for recommendations related to: **{user_input}**")
+
+            # Call the recommendation function
+            recommendations = get_recommendations(user_input)
+
+            # Display recommendations
+            display_recommendations(recommendations)
+
+# Function to display the recommendations in a user-friendly way
+def display_recommendations(recommendations):
+    if isinstance(recommendations, pd.DataFrame):
+        for index, row in recommendations.iterrows():
+            st.write(f"**Song Name**: {row['Song Name']}")
+            st.write(f"**Singer Name**: {row['Singer Name']}")
+            st.write(f"**Type**: {row['Type']}")
+            st.write(f"**Genre**: {row['Genre']}")
+            st.write(f"[Listen here]({row['Link']})")
+            st.write("---")
+    else:
+        st.write(recommendations)
 
 # Run the chatbot
 if __name__ == "__main__":
