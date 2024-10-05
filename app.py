@@ -84,7 +84,7 @@ def chatbot():
             # Display recommendations
             display_recommendations(recommendations)
 
-# Function to display the recommendations in a table with selectable entries
+# Function to display the recommendations in a table with selectable entries and justified text
 def display_recommendations(recommendations):
     if isinstance(recommendations, pd.DataFrame):
         # Select the number of entries to display
@@ -95,8 +95,24 @@ def display_recommendations(recommendations):
 
         # Modify the DataFrame to include clickable links
         limited_recommendations['Link'] = limited_recommendations['Link'].apply(lambda x: f'<a href="{x}" target="_blank">Listen here</a>')
-        
-        # Display the data frame with clickable links
+
+        # HTML style for justified text in the table
+        html_style = """
+        <style>
+            table {
+                width: 100%;
+                text-align: justify;
+            }
+            th, td {
+                padding: 10px;
+                text-align: justify;
+                border-bottom: 1px solid #ddd;
+            }
+        </style>
+        """
+
+        # Display the data frame with clickable links and justified text
+        st.markdown(html_style, unsafe_allow_html=True)
         st.write(limited_recommendations[['Song Name', 'Singer Name', 'Type', 'Genre', 'Link']].to_html(escape=False, index=False), unsafe_allow_html=True)
     else:
         st.write(recommendations)
