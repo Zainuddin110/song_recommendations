@@ -92,7 +92,6 @@ def display_recommendations(recommendations):
             st.write(f"**Singer Name**: {row['Singer Name']}")
             st.write(f"**Type**: {row['Type']}")
             st.write(f"**Genre**: {row['Genre']}")
-            st.write(f"**Tags**: {row['Tags']}")
             st.write(f"[Listen here]({row['Link']})")
             st.write("---")
     else:
