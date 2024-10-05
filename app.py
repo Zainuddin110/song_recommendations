@@ -94,7 +94,7 @@ def display_recommendations(recommendations):
         recommendations['Link'] = recommendations['Link'].apply(lambda x: f'<a href="{x}" target="_blank">Listen here</a>')
         
         # Display the data frame with clickable links
-        st.write(recommendations[['Song Name', 'Singer Name', 'Type', 'Genre', 'Tags', 'Link']].to_html(escape=False, index=False), unsafe_allow_html=True)
+        st.write(recommendations[['Song Name', 'Singer Name', 'Type', 'Genre', 'Link']].to_html(escape=False, index=False), unsafe_allow_html=True)
     else:
         st.write(recommendations)
 
