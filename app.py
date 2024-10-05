@@ -55,6 +55,13 @@ def get_recommendations(query, cosine_sim=cosine_sim):
     else:
         return "Sorry, no song, artist, genre, or tags found matching that query. Please try another."
 
+query_params = st.experimental_get_query_params()
+
+if 'song' in query_params:
+    song_query = query_params['song'][0]
+    st.write(f"Recommendations for: {song_query}")
+    
+    recommendations = recommend_songs(song_query)
 # Streamlit Chatbot Interface
 def chatbot():
     st.title('Song Recommendation')
