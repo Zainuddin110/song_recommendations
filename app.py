@@ -84,14 +84,20 @@ def chatbot():
             # Display recommendations
             display_recommendations(recommendations)
 
-# Function to display the recommendations in a table with selectable entries
+# Function to display the recommendations in a table with clickable links
 def display_recommendations(recommendations):
     if isinstance(recommendations, pd.DataFrame):
         # Select the number of entries to display
         entries_per_page = st.selectbox('Select number of entries to display:', options=[10, 25, 50], index=0)
         
         # Display the data frame
-        st.dataframe(recommendations.head(entries_per_page))
+        for index, row in recommendations.head(entries_per_page).iterrows():
+            st.write(f"**Song Name**: {row['Song Name']}")
+            st.write(f"**Singer Name**: {row['Singer Name']}")
+            st.write(f"**Type**: {row['Type']}")
+            st.write(f"**Genre**: {row['Genre']}")
+            st.markdown(f"[Listen here]({row['Link']})")  # Using markdown to create a clickable link
+            st.write("---")
     else:
         st.write(recommendations)
 
