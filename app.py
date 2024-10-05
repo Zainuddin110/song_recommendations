@@ -90,11 +90,14 @@ def display_recommendations(recommendations):
         # Select the number of entries to display
         entries_per_page = st.selectbox('Select number of entries to display:', options=[10, 25, 50], index=0)
 
+        # Limit the recommendations to the selected number of entries
+        limited_recommendations = recommendations.head(entries_per_page)
+
         # Modify the DataFrame to include clickable links
-        recommendations['Link'] = recommendations['Link'].apply(lambda x: f'<a href="{x}" target="_blank">Listen here</a>')
+        limited_recommendations['Link'] = limited_recommendations['Link'].apply(lambda x: f'<a href="{x}" target="_blank">Listen here</a>')
         
         # Display the data frame with clickable links
-        st.write(recommendations[['Song Name', 'Singer Name', 'Type', 'Genre', 'Link']].to_html(escape=False, index=False), unsafe_allow_html=True)
+        st.write(limited_recommendations[['Song Name', 'Singer Name', 'Type', 'Genre', 'Tags', 'Link']].to_html(escape=False, index=False), unsafe_allow_html=True)
     else:
         st.write(recommendations)
 
