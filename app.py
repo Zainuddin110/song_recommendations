@@ -44,13 +44,13 @@ def get_recommendations(query, cosine_sim=cosine_sim):
         # Remove duplicates and sort the songs based on similarity scores
         sim_scores = sorted(list(set(sim_scores)), key=lambda x: x[1], reverse=True)
         
-        # Get the indices of the top 25 most similar songs
-        sim_scores = sim_scores[:25]
+        # Get the indices of the top 50 most similar songs
+        sim_scores = sim_scores[:50]
         
         # Get the song indices
         song_indices = [i[0] for i in sim_scores]
         
-        # Return the top 25 similar songs
+        # Return the top similar songs
         return songs_df[['Song Name', 'Singer Name', 'Type', 'Genre', 'Tags', 'Link']].iloc[song_indices]
     else:
         return "Sorry, no song, artist, genre, or tags found matching that query. Please try another."
@@ -84,16 +84,14 @@ def chatbot():
             # Display recommendations
             display_recommendations(recommendations)
 
-# Function to display the recommendations in a user-friendly way
+# Function to display the recommendations in a table with selectable entries
 def display_recommendations(recommendations):
     if isinstance(recommendations, pd.DataFrame):
-        for index, row in recommendations.iterrows():
-            st.write(f"**Song Name**: {row['Song Name']}")
-            st.write(f"**Singer Name**: {row['Singer Name']}")
-            st.write(f"**Type**: {row['Type']}")
-            st.write(f"**Genre**: {row['Genre']}")
-            st.write(f"[Listen here]({row['Link']})")
-            st.write("---")
+        # Select the number of entries to display
+        entries_per_page = st.selectbox('Select number of entries to display:', options=[10, 25, 50], index=0)
+        
+        # Display the data frame
+        st.dataframe(recommendations.head(entries_per_page))
     else:
         st.write(recommendations)
 
