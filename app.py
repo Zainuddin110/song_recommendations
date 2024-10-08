@@ -25,7 +25,10 @@ cosine_sim = cosine_similarity(count_matrix, count_matrix)
 
 # Function to get song recommendations based on song name, artist, genre, or tags
 def get_recommendations(query, cosine_sim=cosine_sim):
-    # Filter by song name, artist, genre, type, or tags
+    # First, prioritize exact matches by song name
+    exact_matches = songs_df[songs_df['Song Name'].str.contains(query, case=False, na=False)]
+    
+    # If there are no exact matches, proceed with the general search
     mask = (songs_df['Song Name'].str.contains(query, case=False, na=False) |
             songs_df['Singer Name'].str.contains(query, case=False, na=False) |
             songs_df['Genre'].str.contains(query, case=False, na=False) |
@@ -50,8 +53,14 @@ def get_recommendations(query, cosine_sim=cosine_sim):
         # Get the song indices
         song_indices = [i[0] for i in sim_scores]
         
+        # Combine exact matches at the top followed by the similar songs
+        if not exact_matches.empty:
+            top_results = pd.concat([exact_matches, songs_df.iloc[song_indices]]).drop_duplicates().head(50)
+        else:
+            top_results = songs_df.iloc[song_indices]
+        
         # Return the top similar songs
-        return songs_df[['Song Name', 'Singer Name', 'Type', 'Genre', 'Tags', 'Link']].iloc[song_indices]
+        return top_results[['Song Name', 'Singer Name', 'Type', 'Genre', 'Tags', 'Link']]
     else:
         return "Sorry, no song, artist, genre, or tags found matching that query. Please try another."
 
@@ -113,7 +122,7 @@ def display_recommendations(recommendations):
 
         # Display the data frame with clickable links and justified text
         st.markdown(html_style, unsafe_allow_html=True)
-        st.write(limited_recommendations[['Song Name', 'Singer Name', 'Type', 'Genre', 'Link']].to_html(escape=False, index=False), unsafe_allow_html=True)
+        st.write(limited_recommendations[['Song Name', 'Singer Name', 'Type', 'Genre', 'Tags', 'Link']].to_html(escape=False, index=False), unsafe_allow_html=True)
     else:
         st.write(recommendations)
 
