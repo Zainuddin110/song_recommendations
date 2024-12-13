@@ -71,6 +71,9 @@ def book_recommendation_system():
     query_params = parse_qs(urlparse(st.experimental_get_url()).query)
     user_input = query_params.get('query', [''])[0]  # Default to an empty string if no query parameter
 
+    # Debug: Print query to check if it's captured
+    st.write("Debug: Captured query:", user_input)
+
     if user_input:
         # Display the query being processed
         st.write(f"Looking for recommendations related to: **{user_input}**")
@@ -81,7 +84,7 @@ def book_recommendation_system():
         # Display recommendations
         display_recommendations(recommendations)
     else:
-        st.write("Please enter a query in the search box.")
+        st.write("No query provided. Please enter a search term in the search bar.")
 
 # Function to display the recommendations in a table with clickable links
 def display_recommendations(recommendations):
