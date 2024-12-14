@@ -2,4 +2,3 @@ streamlit
 pandas
 scikit-learn
 openpyxl  # If you're working with .xlsx files
-urllib.parse
