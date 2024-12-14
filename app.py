@@ -5,7 +5,7 @@ import streamlit as st
 from urllib.parse import urlparse, parse_qs
 
 # Load the song dataset
-file_path = 'songs_database.xlsx'  # Replace with your dataset file path
+file_path = 'Hindi_Songs_With_Tags_And_Links_.xlsx'  # Replace with your dataset file path
 songs_df = pd.read_excel(file_path)
 
 # Fill NaN values with empty strings to prevent errors in text processing
@@ -37,7 +37,7 @@ def get_recommendations(query, cosine_sim=cosine_sim):
         songs_df['Genre'].str.contains(query, case=False, na=False) |
         songs_df['Artist'].str.contains(query, case=False, na=False) |
         songs_df['Language'].str.contains(query, case=False, na=False) |
-        songs_df['SongNameAndCode'].str.contains(query, case=False, na=False)
+        songs_df['Song Name'].str.contains(query, case=False, na=False)
     )
 
     if mask.any():
@@ -49,7 +49,7 @@ def get_recommendations(query, cosine_sim=cosine_sim):
             sim_scores += list(enumerate(cosine_sim[idx]))
 
         # Prioritize exact matches by boosting their scores
-        exact_match_mask = songs_df['SongNameAndCode'].str.contains(query, case=False, na=False)
+        exact_match_mask = songs_df['SongName'].str.contains(query, case=False, na=False)
         exact_match_indices = songs_df[exact_match_mask].index
 
         # Add exact matches with a high score (e.g., 1.5) to prioritize them
