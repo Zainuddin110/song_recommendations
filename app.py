@@ -10,13 +10,13 @@ songs_df = pd.read_excel(file_path)
 
 # Fill NaN values with empty strings to prevent errors in text processing
 songs_df['Genre'] = songs_df['Genre'].fillna('')
-songs_df['Artist'] = songs_df['Artist'].fillna('')
+songs_df['Singer Name'] = songs_df['Singer Name'].fillna('')
 songs_df['Language'] = songs_df['Language'].fillna('')
 
 # Combine relevant features into a single column for comparison
 songs_df['combined_features'] = (
     songs_df['Genre'] + " " +
-    songs_df['Artist'] + " " +
+    songs_df['Singer Name'] + " " +
     songs_df['Language']
 )
 
@@ -35,7 +35,7 @@ def get_recommendations(query, cosine_sim=cosine_sim):
     # Create a mask for matching the query across relevant columns
     mask = (
         songs_df['Genre'].str.contains(query, case=False, na=False) |
-        songs_df['Artist'].str.contains(query, case=False, na=False) |
+        songs_df['Singer Name'].str.contains(query, case=False, na=False) |
         songs_df['Language'].str.contains(query, case=False, na=False) |
         songs_df['Song Name'].str.contains(query, case=False, na=False)
     )
@@ -61,7 +61,7 @@ def get_recommendations(query, cosine_sim=cosine_sim):
         song_indices = [i[0] for i in sim_scores]
 
         top_results = songs_df.iloc[song_indices]
-        return top_results[['SongNameAndCode', 'Genre', 'Artist', 'Language', 'Song Link']]
+        return top_results[['SongNameAndCode', 'Genre', 'Singer Name', 'Language', 'Song Link']]
     else:
         return "Sorry, no song found matching that query. Please try another."
 
